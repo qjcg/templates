@@ -1,8 +1,8 @@
 package main
 
 import (
-	"guku.io/devx/v1"
-	"guku.io/devx/v1/traits"
+	"stakpak.dev/devx/v1"
+	"stakpak.dev/devx/v1/traits"
 )
 
 stack: v1.#Stack & {
@@ -32,7 +32,7 @@ stack: v1.#Stack & {
 			//traits.#Volume
 
 			containers: default: {
-				image: "bitnami/nats"
+				image: "bitnami/nats:2"
 				// mounts: [
 				// 	{
 				// 		// or you can mount secrets as files via volumes
@@ -46,7 +46,7 @@ stack: v1.#Stack & {
 		nats2: {
 			traits.#Workload
 
-			containers: default: image: "bitnami/nats"
+			containers: default: image: "bitnami/nats:2"
 		}
 	}
 }
