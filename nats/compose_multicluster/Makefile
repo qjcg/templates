@@ -7,7 +7,7 @@ $(out): docker-compose.cue
 
 .PHONY: debug-template
 debug-template: docker-compose.cue
-	cue export -e '#DebugTemplate' | sed 's/\\"//g' | xargs printf
+	@cue export -e '#DebugTemplate' | sed 's/\\"//g' | xargs printf
 
 .PHONY: clean
 clean:

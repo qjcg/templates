@@ -102,9 +102,7 @@ for i, srv in servers {
 			}
 		}
 
-		volumes: {
-			(volName): {}
-		}
+		volumes: (volName): {}
 
 	}
 }

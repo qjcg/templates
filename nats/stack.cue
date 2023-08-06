@@ -46,9 +46,7 @@ stack: v1.#Stack & {
 		nats2: {
 			traits.#Workload
 
-			containers: default: {
-				image: "bitnami/nats"
-			}
+			containers: default: image: "bitnami/nats"
 		}
 	}
 }

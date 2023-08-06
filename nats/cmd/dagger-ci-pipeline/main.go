@@ -2,42 +2,16 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"dagger.io/dagger"
 )
 
-type client struct {
-	*dagger.Client
-}
-
-func NewClient() (*client, error) {
-	ctx := context.Background()
-	daggerClient, err := dagger.Connect(ctx)
-	return &client{daggerClient}, err
-}
-
-func (c *client) Lint() {
-	src := c.Host().Directory(".")
-
-	return c.Pipeline("lint").
-		Container().
-		From("golangci/golangci-lint:v1.53-alpine").
-		WithDirectory("/src", src).WithWorkdir("/src").
-		WithExec([]string{"golangci-lint", "run"}).
-		Stdout(c.Context)
-}
-
 func main() {
-	c, err := NewClient()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	ctx := context.Background()
 	client, err := dagger.Connect(ctx)
 	if err != nil {
-		panic(err)
+		log.Fatalf("faild to connect to dagger client: %v", err)
 	}
 	defer client.Close()
 
@@ -49,12 +23,11 @@ func main() {
 		WithDirectory("/src", src).WithWorkdir("/src").
 		WithExec([]string{"golangci-lint", "run"}).
 		Stdout(ctx)
-
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to run dagger pipeline: %v", err)
 	}
 
 	if len(output) > 0 {
-		fmt.Println(output[:300])
+		log.Println(output[:300])
 	}
 }
