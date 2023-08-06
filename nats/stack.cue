@@ -12,8 +12,7 @@ stack: v1.#Stack & {
 			traits.#Secret
 
 			secrets: apiKey: {
-				name:    "apikey-a"
-				version: "4"
+				name: "myApikey"
 			}
 		}
 
@@ -29,17 +28,23 @@ stack: v1.#Stack & {
 
 		nats1: {
 			traits.#Workload
-			//traits.#Volume
+			traits.#Volume
 
 			containers: default: {
 				image: "bitnami/nats:2"
-				// mounts: [
-				// 	{
-				// 		// or you can mount secrets as files via volumes
-				// 		volume: volumes.default
-				// 		path:   "secrets/file"
-				// 	},
-				// ]
+				env: {
+					MY_API_KEY: commonSecrets.secrets.apiKey.name
+				}
+				mounts: [
+					{
+						volume: volumes.default
+						path:   "secrets/file"
+					},
+				]
+			}
+
+			volumes: default: {
+				secret: commonSecrets.secrets.apiKey
 			}
 		}
 
