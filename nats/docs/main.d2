@@ -1,0 +1,87 @@
+root: |md
+  # Deployment Diagram: NX NATS SuperCluster
+| {near: top-center}
+
+direction: right
+
+classes: {
+  dc: {
+    icon: "https://icons.terrastruct.com/tech%2Fservers.svg"
+  }
+  nats: {
+    icon: "./images/nats-icon-color.svg"
+  }
+  nats-gw: {
+    icon: "./images/nats-icon-color.svg"
+    style.fill: honeydew
+  }
+  k8s: {
+    icon: "https://icons.terrastruct.com/azure%2F_Companies%2FKubernetes.svg"
+  }
+  influxdb: {
+    shape: cylinder
+  }
+}
+
+mt1n: "mt1n Data Center" {
+  class: dc
+
+	nx1-mt1n-dev: {
+	  class: k8s
+
+	  c1dev-n1 {class: nats}
+	  c1dev-n2 {class: nats}
+    c1dev-n3 {class: nats}
+    c1dev-gw {class: nats-gw}
+
+    c1dev-n1 <-> c1dev-n2 <-> c1dev-n3 <-> c1dev-n1
+
+    c1dev-gw <-> c1dev-n1: {style.stroke-dash: 5}
+    c1dev-gw <-> c1dev-n2: {style.stroke-dash: 5}
+    c1dev-gw <-> c1dev-n3: {style.stroke-dash: 5}
+  }
+
+	nx1-mt1n: {
+	  class: k8s
+
+		c1-n1 {class: nats}
+		c1-n2 {class: nats}
+		c1-n3 {class: nats}
+    c1-gw {class: nats-gw}
+
+    nats-surveyor
+    telegraf
+    grafana-enterprise
+
+    c1-n1 <- nats-surveyor
+    nats-surveyor <- telegraf: "Scrapes Prometheus /metrics"
+    telegraf -> _.influxdb
+    grafana-enterprise -> _.influxdb: Displays NATS metrics in Dashboards
+
+    c1-n1 <-> c1-n2 <-> c1-n3 <-> c1-n1
+
+    c1-gw <-> c1-n1: {style.stroke-dash: 5}
+    c1-gw <-> c1-n2: {style.stroke-dash: 5}
+    c1-gw <-> c1-n3: {style.stroke-dash: 5}
+	}
+
+	nx2-mthq: {
+	  class: k8s
+
+		c2-n1 {class: nats}
+		c2-n2 {class: nats}
+		c2-n3 {class: nats}
+        c2-gw {class: nats-gw}
+
+    c2-n1 <-> c2-n2 <-> c2-n3 <-> c2-n1
+	}
+
+
+  influxdb: {
+    class: influxdb
+  }
+}
+
+aws-us-east1: {
+  class: dc
+}

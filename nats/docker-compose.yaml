@@ -1,0 +1,68 @@
+services:
+
+
+  # CLIENT
+
+  client:
+    image: natsio/nats-box:latest
+    entrypoint: ["/bin/sleep"]
+    command: ["1d"]
+    volumes:
+      - ./conf/sys.conf:/nats/sys.conf
+      - ./conf/client.conf:/nats/client.conf
+    environment:
+      - NATS_URL=nats://montreal1:4222,nats://montreal2:4222,nats://montreal3:4222
+
+
+  # CLUSTER: Montreal
+
+  montreal1:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/montreal.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - montreal
+
+  montreal2:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/montreal.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - montreal
+
+  montreal3:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/montreal.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - montreal
+
+
+  # CLUSTER: London
+
+  london1:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/london.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - london
+
+  london2:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/london.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - london
+
+  london3:
+    image: docker.io/bitnami/nats:2
+    command: ["nats-server", "--config", "/bitnami/nats/conf/london.conf"]
+    volumes:
+      - ./conf:/bitnami/nats/conf
+    profiles:
+      - london

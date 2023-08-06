@@ -1,0 +1,42 @@
+#+TITLE: NATS Examples TODO List
+
+* TODO docker-compose [1/11]
+
+** DONE Client
+
+** TODO Auth: Token
+
+** TODO Auth: User/Pass
+** TODO Auth: JWTs
+
+** TODO 1x server
+
+** TODO TLS
+
+** TODO 1x 1-node cluster
+
+** TODO 1x 3-node cluster
+
+** TODO 3x 1-node multi-cluster
+
+** TODO 3x 3-node multi-cluster
+
+** TODO 1x leaf-node
+
+- E.g. "offline-mode" queue for laptop
+
+* TODO Kubernetes [0/6]
+
+** TODO 1x 3-node cluster via K3d
+
+** TODO 3x 3-node multi-cluster via K3d
+
+** TODO 1x 3-node dev cluster via nx1-mt1n-dev
+
+** TODO 1x 3-node prod cluster via nx1-mt1n
+
+** TODO 1x 3-node prod cluster via nx2-mthq
+
+** TODO 1x 3-node prod cluster on AWS
+
+** TODO 3x 3-node prod multi-cluster (nx1-mt1n)
