@@ -6,47 +6,14 @@ services:
       NATS_URL: nats://ca-montreal-1:4222
       NATS_USER: admin
       NATS_PASSWORD: password
-  ca-montreal-1:
+  us-chicago-1:
     image: nats:2
-    command: --name ca-montreal-1 --config ca-montreal.conf
+    command: --name us-chicago-1 --config us-chicago.conf
     ports:
       - "11422:4222"
       - "11622:6222"
       - "11722:7422"
       - "11822:8222"
-    volumes:
-      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
-      - nats-ca-montreal-1:/nats
-  ca-montreal-2:
-    image: nats:2
-    command: --name ca-montreal-2 --config ca-montreal.conf
-    ports:
-      - "12422:4222"
-      - "12622:6222"
-      - "12722:7422"
-      - "12822:8222"
-    volumes:
-      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
-      - nats-ca-montreal-2:/nats
-  ca-montreal-3:
-    image: nats:2
-    command: --name ca-montreal-3 --config ca-montreal.conf
-    ports:
-      - "13422:4222"
-      - "13622:6222"
-      - "13722:7422"
-      - "13822:8222"
-    volumes:
-      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
-      - nats-ca-montreal-3:/nats
-  us-chicago-1:
-    image: nats:2
-    command: --name us-chicago-1 --config us-chicago.conf
-    ports:
-      - "21422:4222"
-      - "21622:6222"
-      - "21722:7422"
-      - "21822:8222"
     volumes:
       - ./conf/us-chicago.conf:/us-chicago.conf:ro
       - nats-us-chicago-1:/nats
@@ -54,10 +21,10 @@ services:
     image: nats:2
     command: --name us-chicago-2 --config us-chicago.conf
     ports:
-      - "22422:4222"
-      - "22622:6222"
-      - "22722:7422"
-      - "22822:8222"
+      - "12422:4222"
+      - "12622:6222"
+      - "12722:7422"
+      - "12822:8222"
     volumes:
       - ./conf/us-chicago.conf:/us-chicago.conf:ro
       - nats-us-chicago-2:/nats
@@ -65,54 +32,21 @@ services:
     image: nats:2
     command: --name us-chicago-3 --config us-chicago.conf
     ports:
-      - "23422:4222"
-      - "23622:6222"
-      - "23722:7422"
-      - "23822:8222"
+      - "13422:4222"
+      - "13622:6222"
+      - "13722:7422"
+      - "13822:8222"
     volumes:
       - ./conf/us-chicago.conf:/us-chicago.conf:ro
       - nats-us-chicago-3:/nats
-  us-newjersey-1:
-    image: nats:2
-    command: --name us-newjersey-1 --config us-newjersey.conf
-    ports:
-      - "31422:4222"
-      - "31622:6222"
-      - "31722:7422"
-      - "31822:8222"
-    volumes:
-      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
-      - nats-us-newjersey-1:/nats
-  us-newjersey-2:
-    image: nats:2
-    command: --name us-newjersey-2 --config us-newjersey.conf
-    ports:
-      - "32422:4222"
-      - "32622:6222"
-      - "32722:7422"
-      - "32822:8222"
-    volumes:
-      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
-      - nats-us-newjersey-2:/nats
-  us-newjersey-3:
-    image: nats:2
-    command: --name us-newjersey-3 --config us-newjersey.conf
-    ports:
-      - "33422:4222"
-      - "33622:6222"
-      - "33722:7422"
-      - "33822:8222"
-    volumes:
-      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
-      - nats-us-newjersey-3:/nats
   gb-london-1:
     image: nats:2
     command: --name gb-london-1 --config gb-london.conf
     ports:
-      - "41422:4222"
-      - "41622:6222"
-      - "41722:7422"
-      - "41822:8222"
+      - "21422:4222"
+      - "21622:6222"
+      - "21722:7422"
+      - "21822:8222"
     volumes:
       - ./conf/gb-london.conf:/gb-london.conf:ro
       - nats-gb-london-1:/nats
@@ -120,10 +54,10 @@ services:
     image: nats:2
     command: --name gb-london-2 --config gb-london.conf
     ports:
-      - "42422:4222"
-      - "42622:6222"
-      - "42722:7422"
-      - "42822:8222"
+      - "22422:4222"
+      - "22622:6222"
+      - "22722:7422"
+      - "22822:8222"
     volumes:
       - ./conf/gb-london.conf:/gb-london.conf:ro
       - nats-gb-london-2:/nats
@@ -131,13 +65,79 @@ services:
     image: nats:2
     command: --name gb-london-3 --config gb-london.conf
     ports:
+      - "23422:4222"
+      - "23622:6222"
+      - "23722:7422"
+      - "23822:8222"
+    volumes:
+      - ./conf/gb-london.conf:/gb-london.conf:ro
+      - nats-gb-london-3:/nats
+  ca-montreal-1:
+    image: nats:2
+    command: --name ca-montreal-1 --config ca-montreal.conf
+    ports:
+      - "31422:4222"
+      - "31622:6222"
+      - "31722:7422"
+      - "31822:8222"
+    volumes:
+      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
+      - nats-ca-montreal-1:/nats
+  ca-montreal-2:
+    image: nats:2
+    command: --name ca-montreal-2 --config ca-montreal.conf
+    ports:
+      - "32422:4222"
+      - "32622:6222"
+      - "32722:7422"
+      - "32822:8222"
+    volumes:
+      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
+      - nats-ca-montreal-2:/nats
+  ca-montreal-3:
+    image: nats:2
+    command: --name ca-montreal-3 --config ca-montreal.conf
+    ports:
+      - "33422:4222"
+      - "33622:6222"
+      - "33722:7422"
+      - "33822:8222"
+    volumes:
+      - ./conf/ca-montreal.conf:/ca-montreal.conf:ro
+      - nats-ca-montreal-3:/nats
+  us-newjersey-1:
+    image: nats:2
+    command: --name us-newjersey-1 --config us-newjersey.conf
+    ports:
+      - "41422:4222"
+      - "41622:6222"
+      - "41722:7422"
+      - "41822:8222"
+    volumes:
+      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
+      - nats-us-newjersey-1:/nats
+  us-newjersey-2:
+    image: nats:2
+    command: --name us-newjersey-2 --config us-newjersey.conf
+    ports:
+      - "42422:4222"
+      - "42622:6222"
+      - "42722:7422"
+      - "42822:8222"
+    volumes:
+      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
+      - nats-us-newjersey-2:/nats
+  us-newjersey-3:
+    image: nats:2
+    command: --name us-newjersey-3 --config us-newjersey.conf
+    ports:
       - "43422:4222"
       - "43622:6222"
       - "43722:7422"
       - "43822:8222"
     volumes:
-      - ./conf/gb-london.conf:/gb-london.conf:ro
-      - nats-gb-london-3:/nats
+      - ./conf/us-newjersey.conf:/us-newjersey.conf:ro
+      - nats-us-newjersey-3:/nats
   sg-singapore-1:
     image: nats:2
     command: --name sg-singapore-1 --config sg-singapore.conf
@@ -172,18 +172,18 @@ services:
       - ./conf/sg-singapore.conf:/sg-singapore.conf:ro
       - nats-sg-singapore-3:/nats
 volumes:
-  nats-ca-montreal-1: {}
-  nats-ca-montreal-2: {}
-  nats-ca-montreal-3: {}
   nats-us-chicago-1: {}
   nats-us-chicago-2: {}
   nats-us-chicago-3: {}
-  nats-us-newjersey-1: {}
-  nats-us-newjersey-2: {}
-  nats-us-newjersey-3: {}
   nats-gb-london-1: {}
   nats-gb-london-2: {}
   nats-gb-london-3: {}
+  nats-ca-montreal-1: {}
+  nats-ca-montreal-2: {}
+  nats-ca-montreal-3: {}
+  nats-us-newjersey-1: {}
+  nats-us-newjersey-2: {}
+  nats-us-newjersey-3: {}
   nats-sg-singapore-1: {}
   nats-sg-singapore-2: {}
   nats-sg-singapore-3: {}

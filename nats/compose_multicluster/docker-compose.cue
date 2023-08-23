@@ -2,21 +2,25 @@ package main
 
 import (
 	"list"
+	"strings"
 	"text/template"
 )
 
-#NATSServer: {
-	image:    *"nats:2" | string
+#NATSContainer: {
+	image: "nats:2"
+
 	command!: string
+
 	environment?: [string]: string
 	ports?: [...string]
 	volumes?: [...string]
 }
 
-#ConfTemplate: """
+#NATSConfTemplate: """
 	accounts: {
 	
 	  $SYS: {
+		  jetstream: enabled,
 	    users: [
 	      { user: admin, password: password }
 	    ]
@@ -54,41 +58,83 @@ import (
 	}
 	"""
 
-#DebugTemplate: template.Execute(#ConfTemplate, {
+#DebugTemplate: template.Execute(#NATSConfTemplate, {
 	clusterName: "ZZ"
 	gatewayName: clusterName
 })
 
-#Server: {
-	name!:    string
-	qty!:     uint
-	cluster?: string
+#Country: {
+	name!: string
+	code!: string
 }
 
-let servers = [
-	{clusterName: "CA", name: "ca-montreal", qty:  3},
-	{clusterName: "US", name: "us-chicago", qty:   3},
-	{clusterName: "US", name: "us-newjersey", qty: 3},
-	{clusterName: "GB", name: "gb-london", qty:    3},
-	{clusterName: "SG", name: "sg-singapore", qty: 3},
+_Countries: [Name=string]: name: Name
+_Countries: {
+	Canada: {
+		code: "CA"
+	}
+	USA: {
+		code: "US"
+	}
+	GB: {
+		code: "GB"
+	}
+	Singapore: {
+		code: "SG"
+	}
+}
+
+#City: {
+	name!:    string
+	country!: #Country
+}
+
+_Cities: [Name=string]: name: Name
+_Cities: {
+	Montreal: {country: _Countries.Canada}
+	Singapore: {country: _Countries.Singapore}
+	London: {country: _Countries.GB}
+	Chicago: {country: _Countries.USA}
+	NewJersey: {country: _Countries.USA}
+}
+
+#NATSClusterConfig: {
+	name!:  string
+	nodes!: uint8
+	city!:  #City
+}
+
+#defaultNATSClusterConfig: self = {
+	name:  strings.ToLower("\(self.city.country.code)-\(self.city.name)")
+	nodes: *3 | uint8
+
+	#NATSClusterConfig
+}
+
+let clusters = [...#defaultNATSClusterConfig] & [
+	{city: _Cities.Chicago},
+	{city: _Cities.London},
+	{city: _Cities.Montreal},
+	{city: _Cities.NewJersey},
+	{city: _Cities.Singapore},
 ]
 
-// NATS clusters.							
+// NATS clusters.
 
-for i, srv in servers {
-	for n in list.Range(1, srv.qty+1, 1) {
+for i, c in clusters {
+	for n in list.Range(1, c.nodes+1, 1) {
 
-		let confFile = "\(srv.name).conf"
+		let confFile = "\(c.name).conf"
 		let portPrefix = "\(i+1)\(n)"
-		let svcName = "\(srv.name)-\(n)"
-		let volName = "nats-\(svcName)"
+		let nodeName = "\(c.name)-\(n)"
+		let volName = "nats-\(nodeName)"
 
 		services: {
 
 			// NATS cluster.
 			// See https://github.com/ConnectEverything/rethink_connectivity_examples/blob/main/episode_5/docker-compose.yml
-			"\(svcName)": #NATSServer & {
-				command: "--name \(svcName) --config \(confFile)"
+			"\(nodeName)": #NATSContainer & {
+				command: "--name \(nodeName) --config \(confFile)"
 				ports: [
 					"\(portPrefix)422:4222",
 					"\(portPrefix)622:6222",
