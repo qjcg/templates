@@ -1,12 +1,13 @@
 out := docker-compose.yaml
+cue := $(out:.yaml=.cue)
 
 build: $(out)
 
-$(out): docker-compose.cue
+$(out): $(cue)
 	cue export $< --out yaml > $@
 
 .PHONY: debug-template
-debug-template: docker-compose.cue
+debug-template: $(cue)
 	@cue export -e '#DebugTemplate' | sed 's/\\"//g' | xargs printf
 
 certs:
