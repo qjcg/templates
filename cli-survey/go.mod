@@ -1,4 +1,4 @@
-module github.com/qjcg/templates/survey-scaffold
+module github.com/qjcg/templates/cli-survey
 
 go 1.20
 

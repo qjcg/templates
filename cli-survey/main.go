@@ -27,6 +27,7 @@ var questions = map[string][]*survey.Question{
 				Message: "Service name:",
 				Help:    "Name of the service",
 			},
+			Validate: survey.Required,
 		},
 		{
 			Name: "Host",
@@ -46,6 +47,46 @@ var questions = map[string][]*survey.Question{
 			},
 		},
 	},
+
+	"dashboard": {
+		{
+			Name: "Name",
+			Prompt: &survey.Input{
+				Message: "Dashboard name:",
+				Help:    "Name of the dashboard",
+			},
+			Validate: survey.Required,
+		},
+		{
+			Name: "Template",
+			Prompt: &survey.Select{
+				Message: "Template type:",
+				Options: []string{"foo", "bar", "vanilla"},
+				Default: "foo",
+				Help:    "The dashboard template to use",
+			},
+		},
+	},
+
+	"pipeline": {
+		{
+			Name: "Name",
+			Prompt: &survey.Input{
+				Message: "Pipeline name:",
+				Help:    "Name of the pipeline",
+			},
+			Validate: survey.Required,
+		},
+		{
+			Name: "Template",
+			Prompt: &survey.Select{
+				Message: "Template type:",
+				Options: []string{"foo", "bar", "vanilla"},
+				Default: "foo",
+				Help:    "The pipeline template to use",
+			},
+		},
+	},
 }
 
 type Conf struct {
@@ -58,14 +99,26 @@ type Service struct {
 	Port uint
 }
 
-func main() {
-	var conf Conf
+type Dashboard struct {
+	Name     string
+	Template string
+}
 
+type Pipeline struct {
+	Name     string
+	Template string
+}
+
+func main() {
+	fmt.Printf("Welcome to the Awesome Software Solutions Tool! 💯\n\n")
+
+	var conf Conf
 	err := survey.Ask(questions["type"], &conf, survey.WithKeepFilter(true))
 	if err != nil {
 		fmt.Printf("failed to complete type questions: %v\n", err)
 		os.Exit(1)
 	}
+	fmt.Printf("%v\n\n", conf.TemplateType)
 
 	for _, tt := range conf.TemplateType {
 		switch tt {
@@ -76,9 +129,25 @@ func main() {
 				fmt.Printf("failed to complete service questions: %v\n", err)
 				os.Exit(1)
 			}
-			fmt.Println(service)
+			fmt.Printf("%v\n\n", service)
+
+		case "dashboard":
+			var dashboard Dashboard
+			err = survey.Ask(questions["dashboard"], &dashboard)
+			if err != nil {
+				fmt.Printf("failed to complete dashboard questions: %v\n", err)
+				os.Exit(1)
+			}
+			fmt.Printf("%v\n\n", dashboard)
+
+		case "pipeline":
+			var pipeline Pipeline
+			err = survey.Ask(questions["pipeline"], &pipeline)
+			if err != nil {
+				fmt.Printf("failed to complete pipeline questions: %v\n", err)
+				os.Exit(1)
+			}
+			fmt.Printf("%v\n\n", pipeline)
 		}
 	}
-
-	fmt.Println(conf.TemplateType)
 }
