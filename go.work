@@ -3,6 +3,7 @@ go 1.20
 use (
 	./cli
 	./cli-bonzai
+	./cli-script
 	./cli-survey
 	./nats
 )

@@ -1,0 +1,4 @@
+# WEATHER
+
+exec weather
+stdout '^[0-9]+\.[0-9]'
