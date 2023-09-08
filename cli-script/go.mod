@@ -1,6 +1,6 @@
 module github.com/qjcg/templates/cli-script
 
-go 1.20
+go 1.21.0
 
 require (
 	github.com/bitfield/script v0.22.0
