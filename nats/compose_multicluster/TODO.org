@@ -1,0 +1,3 @@
+* TODO Generate configs for all clusters (currently just Montreal)
+* TODO Start ALL clusters on ~docker up -d~ (currently just Montreal)
+* TODO Add NKEYs auth to all configs
