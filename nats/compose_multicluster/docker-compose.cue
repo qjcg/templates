@@ -9,7 +9,8 @@ import (
 #NATSContainer: {
 	image: "nats:2"
 
-	command!: string
+	_clusterName!: string
+	command!:      string
 
 	environment?: [string]: string
 	ports?: [...string]
@@ -20,16 +21,16 @@ import (
 	accounts: {
 	
 	  $SYS: {
-		  jetstream: enabled,
+	    jetstream: enabled,
 	    users: [
-	      { user: admin, password: password }
+	      { user: {{ .adminUser }}, password: {{ .password }} }
 	    ]
 	  },
 	
 	  TEAM_A: {
 	    jetstream: enabled,
 	    users: [
-	      { user: john, password: password }
+	      { user: {{ .regularUser }}, password: {{ .password }} }
 	    ]
 	  }
 	
@@ -111,22 +112,22 @@ _Cities: {
 	#NATSClusterConfig
 }
 
-let clusters = [...#defaultNATSClusterConfig] & [
-	{city: _Cities.Chicago},
-	{city: _Cities.London},
-	{city: _Cities.Montreal},
-	{city: _Cities.NewJersey},
-	{city: _Cities.Singapore},
+_clusters: [...#defaultNATSClusterConfig] & [
+		{city: _Cities.Chicago},
+		{city: _Cities.London},
+		{city: _Cities.Montreal},
+		{city: _Cities.NewJersey},
+		{city: _Cities.Singapore},
 ]
 
 // NATS clusters.
 
-for i, c in clusters {
+for i, c in _clusters {
 	for n in list.Range(1, c.nodes+1, 1) {
 
-		let confFile = "\(c.name).conf"
-		let portPrefix = "\(i+1)\(n)"
 		let nodeName = "\(c.name)-\(n)"
+		let confFile = "\(nodeName).conf"
+		let portPrefix = "\(i+1)\(n)"
 		let volName = "nats-\(nodeName)"
 
 		services: {
@@ -134,6 +135,8 @@ for i, c in clusters {
 			// NATS cluster.
 			// See https://github.com/ConnectEverything/rethink_connectivity_examples/blob/main/episode_5/docker-compose.yml
 			"\(nodeName)": #NATSContainer & {
+				_clusterName: "\(c.name)"
+
 				command: "--name \(nodeName) --config \(confFile)"
 				ports: [
 					"\(portPrefix)422:4222",

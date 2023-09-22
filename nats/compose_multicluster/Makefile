@@ -1,7 +1,8 @@
 out := docker-compose.yaml
 cue := $(out:.yaml=.cue)
+conf_out := conf
 
-build: $(out)
+build: $(out) conf
 
 $(out): $(cue)
 	cue export $< --out yaml > $@
@@ -17,6 +18,10 @@ certs:
 certs-clean:
 	mkcert -uninstall
 
+.PHONY: conf
+conf:
+	cue build
+
 .PHONY: clean
 clean:
-	rm -f $(out)
+	rm -rf $(out) $(conf_out)
