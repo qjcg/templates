@@ -3,7 +3,6 @@ package main
 import (
 	"list"
 	"strings"
-	"text/template"
 )
 
 #NATSContainer: {
@@ -17,53 +16,6 @@ import (
 	volumes?: [...string]
 }
 
-#NATSConfTemplate: """
-	accounts: {
-	
-	  $SYS: {
-	    jetstream: enabled,
-	    users: [
-	      { user: {{ .adminUser }}, password: {{ .password }} }
-	    ]
-	  },
-	
-	  TEAM_A: {
-	    jetstream: enabled,
-	    users: [
-	      { user: {{ .regularUser }}, password: {{ .password }} }
-	    ]
-	  }
-	
-	}
-	
-	jetstream {}
-	
-	leafnodes {}
-
-	cluster: {
-	  name: {{ .clusterName }},
-	  port: 6222,
-	  routes: [
-	    "nats://ca-montreal-1:6222"
-	  ]
-	}
-	
-	gateway: {
-	  name: {{ .gatewayName }},
-	  port: 7222,
-	  gateways: [
-	    { name: CA, url: "nats://ca-montreal-1:7222" }
-	    { name: US, url: "nats://us-chicago-1:7222" }
-	    { name: SG, url: "nats://sg-singapore-1:7222" }
-	  ]
-	}
-	"""
-
-#DebugTemplate: template.Execute(#NATSConfTemplate, {
-	clusterName: "ZZ"
-	gatewayName: clusterName
-})
-
 #Country: {
 	name!: string
 	code!: string
@@ -71,18 +23,10 @@ import (
 
 _Countries: [Name=string]: name: Name
 _Countries: {
-	Canada: {
-		code: "CA"
-	}
-	USA: {
-		code: "US"
-	}
-	GB: {
-		code: "GB"
-	}
-	Singapore: {
-		code: "SG"
-	}
+	Canada: code: "CA"
+	USA: code: "US"
+	GB: code: "GB"
+	Singapore: code: "SG"
 }
 
 #City: {
@@ -92,11 +36,11 @@ _Countries: {
 
 _Cities: [Name=string]: name: Name
 _Cities: {
-	Montreal: {country: _Countries.Canada}
-	Singapore: {country: _Countries.Singapore}
-	London: {country: _Countries.GB}
-	Chicago: {country: _Countries.USA}
-	NewJersey: {country: _Countries.USA}
+	Montreal: country: _Countries.Canada
+	Singapore: country: _Countries.Singapore
+	London: country: _Countries.GB
+	Chicago: country: _Countries.USA
+	NewJersey: country: _Countries.USA
 }
 
 #NATSClusterConfig: {
