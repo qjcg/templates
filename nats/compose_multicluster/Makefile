@@ -22,6 +22,12 @@ certs-clean:
 conf:
 	cue build
 
+diagram_d2 := deployment-architecture.d2
+diagram_svg := $(diagram_d2:.d2=.svg)
+
+svg: $(diagram_d2)
+	d2 $<
+
 .PHONY: clean
 clean:
-	rm -rf $(out) $(conf_out)
+	rm -rf $(out) $(conf_out) $(diagram_svg)
