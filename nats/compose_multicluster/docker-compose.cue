@@ -23,9 +23,9 @@ import (
 
 _Countries: [Name=string]: name: Name
 _Countries: {
-	Canada: code: "CA"
-	USA: code: "US"
-	GB: code: "GB"
+	Canada: code:    "CA"
+	USA: code:       "US"
+	GB: code:        "GB"
 	Singapore: code: "SG"
 }
 
@@ -36,10 +36,10 @@ _Countries: {
 
 _Cities: [Name=string]: name: Name
 _Cities: {
-	Montreal: country: _Countries.Canada
+	Montreal: country:  _Countries.Canada
 	Singapore: country: _Countries.Singapore
-	London: country: _Countries.GB
-	Chicago: country: _Countries.USA
+	London: country:    _Countries.GB
+	Chicago: country:   _Countries.USA
 	NewJersey: country: _Countries.USA
 }
 
@@ -70,12 +70,11 @@ for i, c in _clusters {
 	for n in list.Range(1, c.nodes+1, 1) {
 
 		let nodeName = "\(c.name)-\(n)"
-		let confFile = "\(nodeName).conf"
+		let confFile = "\(nodeName).json"
 		let portPrefix = "\(i+1)\(n)"
 		let volName = "nats-\(nodeName)"
 
 		services: {
-
 			// NATS cluster.
 			// See https://github.com/ConnectEverything/rethink_connectivity_examples/blob/main/episode_5/docker-compose.yml
 			"\(nodeName)": #NATSContainer & {
