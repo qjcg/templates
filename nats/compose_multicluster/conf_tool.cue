@@ -13,8 +13,14 @@ import (
 	adminUser!:   string
 	regularUser!: string
 	password!:    string
-	clusterName!: string
+
+	clusterName?:  string
+	clusterRoutes: *["nats://ca-montreal-1:6222"] | [...]
+
 	gatewayName!: string
+	gateways?: [...]
+
+	leafnodes: *[] | [...]
 
 	Out: {
 		accounts: {
@@ -34,12 +40,12 @@ import (
 		jetstream: {}
 		leafnodes: {}
 
-		cluster: {
-			name: clusterName
-			port: 6222
-			routes: [
-				"nats://ca-montreal-1:6222",
-			]
+		if clusterName != _|_ {
+			cluster: {
+				name:   clusterName
+				port:   6222
+				routes: clusterRoutes
+			}
 		}
 
 		gateway: {
@@ -66,23 +72,23 @@ command: build: {
 
 	for i, c in _clusters {
 		for n in list.Range(1, c.nodes+1, 1) {
-			for name, cueData in services {
+			for name, cueData in services if name != "natsbox" {
 
 				let fileName = "\(outdir)/\(name).json"
 
+				let data = json.Marshal(({
+					adminUser:   "admin"
+					regularUser: "john"
+					password:    "password"
+					gatewayName: "myCluster"
+					clusterName: c.name
+
+					#NATSConf
+				}).Out)
+
 				"write_\(name)": file.Create & {
 					filename: fileName
-					contents: json.Marshal({
-						({
-							adminUser:   "admin"
-							regularUser: "john"
-							password:    "password"
-							clusterName: "myCluster"
-							gatewayName: "myCluster"
-
-							#NATSConf
-						}).Out
-					})
+					contents: data
 
 					$after: mkdir
 				}

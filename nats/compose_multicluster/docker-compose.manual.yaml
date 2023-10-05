@@ -1,0 +1,108 @@
+services:
+
+  natsbox:
+    image: natsio/nats-box
+    command: sleep 1d
+    environment:
+      NATS_URL: nats://ca-montreal-1:4222
+      NATS_USER: admin
+      NATS_PASSWORD: password
+
+  us-chicago-1:
+    image: nats:2
+    command: --config cluster.conf
+    environment:
+      NATS_PORT: 4322
+      NATS_SERVER_NAME: us-chicago-1
+      NATS_CLUSTER_NAME: US
+      NATS_CLUSTER_PORT: 6322
+    ports:
+      - "11422:4222"
+      - "11622:6222"
+      - "11722:7422"
+      - "11822:8222"
+    volumes:
+      - ./conf/00_accounts.conf:/00_accounts.conf:ro
+      - ./conf/cluster.conf:/cluster.conf:ro
+      - nats-us-chicago-1:/nats
+
+  us-chicago-2:
+    image: nats:2
+    command: --config cluster.conf
+    environment:
+      NATS_PORT: 4323
+      NATS_SERVER_NAME: us-chicago-2
+      NATS_CLUSTER_NAME: US
+      NATS_CLUSTER_PORT: 6323
+    ports:
+      - "11422:4223"
+      - "11622:6223"
+      - "11722:7423"
+      - "11822:8223"
+    volumes:
+      - ./conf/00_accounts.conf:/00_accounts.conf:ro
+      - ./conf/cluster.conf:/cluster.conf:ro
+      - nats-us-chicago-2:/nats
+
+  us-chicago-3:
+    image: nats:2
+    command: --config cluster.conf
+    environment:
+      NATS_PORT: 4324
+      NATS_SERVER_NAME: us-chicago-3
+      NATS_CLUSTER_NAME: US
+      NATS_CLUSTER_PORT: 6324
+    ports:
+      - "11422:4224"
+      - "11622:6224"
+      - "11722:7424"
+      - "11822:8224"
+    volumes:
+      - ./conf/00_accounts.conf:/00_accounts.conf:ro
+      - ./conf/cluster.conf:/cluster.conf:ro
+      - nats-us-chicago-3:/nats
+
+  ca-montreal-1:
+    image: nats:2
+    command: --config cluster.conf
+    ports:
+      - "21422:4222"
+      - "21622:6222"
+      - "21722:7422"
+      - "21822:8222"
+    volumes:
+      - ./conf/00_accounts.conf:/00_accounts.conf:ro
+      - ./conf/cluster.conf:/cluster.conf:ro
+      - nats-gb-london-1:/nats
+
+  ca-montreal-2:
+    image: nats:2
+    command: --name gb-london-2 --config gb-london-2.json
+    ports:
+      - "22422:4222"
+      - "22622:6222"
+      - "22722:7422"
+      - "22822:8222"
+    volumes:
+      - ./conf/gb-london-2.json:/gb-london-2.json:ro
+      - nats-gb-london-2:/nats
+
+  ca-montreal-3:
+    image: nats:2
+    command: --name gb-london-3 --config gb-london-3.json
+    ports:
+      - "23422:4222"
+      - "23622:6222"
+      - "23722:7422"
+      - "23822:8222"
+    volumes:
+      - ./conf/gb-london-3.json:/gb-london-3.json:ro
+      - nats-gb-london-3:/nats
+
+volumes:
+  nats-us-chicago-1: {}
+  nats-us-chicago-2: {}
+  nats-us-chicago-3: {}
+  nats-ca-montreal-1: {}
+  nats-ca-montreal-2: {}
+  nats-ca-montreal-3: {}

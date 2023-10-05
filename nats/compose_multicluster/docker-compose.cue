@@ -8,8 +8,7 @@ import (
 #NATSContainer: {
 	image: "nats:2"
 
-	_clusterName!: string
-	command!:      string
+	command!: string
 
 	environment?: [string]: string
 	ports?: [...string]
@@ -21,6 +20,7 @@ import (
 	code!: string
 }
 
+// A list of countries along with their 2-letter codes.
 _Countries: [Name=string]: name: Name
 _Countries: {
 	Canada: code:    "CA"
@@ -34,6 +34,7 @@ _Countries: {
 	country!: #Country
 }
 
+// A list of cities along with the countries they are part of.
 _Cities: [Name=string]: name: Name
 _Cities: {
 	Montreal: country:  _Countries.Canada
@@ -43,26 +44,46 @@ _Cities: {
 	NewJersey: country: _Countries.USA
 }
 
-#NATSClusterConfig: {
+#NATSClusterParams: {
 	name!:  string
 	nodes!: uint8
 	city!:  #City
 }
 
-#defaultNATSClusterConfig: self = {
+#defaultNATSClusterParams: self = {
 	name:  strings.ToLower("\(self.city.country.code)-\(self.city.name)")
 	nodes: *3 | uint8
 
-	#NATSClusterConfig
+	#NATSClusterParams
 }
 
-_clusters: [...#defaultNATSClusterConfig] & [
-		{city: _Cities.Chicago},
-		{city: _Cities.London},
-		{city: _Cities.Montreal},
-		{city: _Cities.NewJersey},
-		{city: _Cities.Singapore},
-]
+_clusters: [ClusterName=string]: {
+	params: #NATSClusterParams
+
+	nodes: [NodeName=string]: {
+		params:
+			container: #NATSContainer
+	}
+}
+
+for name, data in _clusters {
+	_clusters: "\(name)": {
+		for n in c.params.nodes {
+			let nodeName = "\(name)-\(n)"
+			let confFile = "\(nodeName).json"
+			let volName = "nats-\(nodeName)"
+
+			nodes: "\(nodeName)": #NATSContainer & {
+				command: "--config \(confFile)"
+				volumes: [
+					"./conf/\(confFile):/\(confFile):ro",
+					"\(volName):/nats",
+				]
+			}
+
+		}
+	}
+}
 
 // NATS clusters.
 
@@ -78,9 +99,7 @@ for i, c in _clusters {
 			// NATS cluster.
 			// See https://github.com/ConnectEverything/rethink_connectivity_examples/blob/main/episode_5/docker-compose.yml
 			"\(nodeName)": #NATSContainer & {
-				_clusterName: "\(c.name)"
-
-				command: "--name \(nodeName) --config \(confFile)"
+				command: "--config \(confFile)"
 				ports: [
 					"\(portPrefix)422:4222",
 					"\(portPrefix)622:6222",

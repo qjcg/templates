@@ -1,0 +1,27 @@
+root: "Deployment Sketch" {
+  mtl: "Montreal Cluster" {
+    mtl1 <-> mtl2 <-> mtl3 <-> mtl1
+
+    mtl-leaf1 <-> mtl3
+
+    mtl-gw
+
+    mtl1 -> _.chi.chi-gw
+    mtl2 -> _.chi.chi-gw
+    mtl3 -> _.chi.chi-gw
+  }
+
+  chi: "Chicago Cluster" {
+    chi1 <-> chi2 <-> chi3 <-> chi1
+
+    chi-leaf1 <-> chi2
+
+    chi-gw
+
+    chi1 -> _.mtl.mtl-gw
+    chi2 -> _.mtl.mtl-gw
+    chi3 -> _.mtl.mtl-gw
+  }
+
+  natsbox
+}

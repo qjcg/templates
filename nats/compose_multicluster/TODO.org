@@ -1,3 +1,35 @@
-* TODO Generate configs for all clusters (currently just Montreal)
-* TODO Start ALL clusters on ~docker up -d~ (currently just Montreal)
-* TODO Add NKEYs auth to all configs
+* TODO Add nodes to separate clusters (currently all single cluster "myCluster")
+* Refactor docker-compose.cue to use the following structure
+
+#+begin_src cue
+  // Nodes to create:
+
+  // 1. For each City, ~3-nodes that form a cluster, and one gateway.
+  _nodes: [Name=string]: {
+    params: {
+
+	  }
+
+    configFile: {
+      name: "\(Name).json"
+      contents: string
+    }
+
+    dockerComposeConfig: {
+		  services: "\(Name)": #NATSContainer & {
+			  command: "--config \(configFile.name)"
+		  }
+
+		  volumes: "nats-\(Name)": {}
+	  }
+  }
+
+  // 2. One natsbox node that isn't part of any cluster.
+  _nodes: natsbox: {
+  }
+
+  // Leafnode(s)?
+#+end_src
+
+* DONE Generate configs for all clusters
+* DONE Start ALL clusters on ~docker up -d~ (currently just Montreal)
