@@ -1,6 +1,6 @@
 templates_basepath := github.com/qjcg/templates
 templates := $(shell fd --type d --maxdepth 1 --exclude '_*' | xargs -n 1 basename)
-test_dir := _test
+test_dir := /tmp/gonew_test
 
 test:
 	$(foreach t,$(templates),cd $(t) && go test ./...; cd ..; )
