@@ -65,6 +65,22 @@ func TestCRUD(t *testing.T) {
 	tt.Run("update", func(t *testing.T) {
 		tt := T{t}
 		tt.check(db.Exec("UPDATE users SET name = 'jerry2' WHERE name = 'jerry'"))
+		rows, err := db.Query("SELECT * FROM users")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			u := new(user)
+			tt.check(rows.Scan(&u.name, &u.age, &u.height, &u.awesome, &u.bday))
+			tt.Logf(
+				"%s is %d years old, %.2f tall, bday on %s and has awesomeness: %t\n",
+				u.name, u.age, u.height, u.bday.Format(time.RFC3339), u.awesome,
+			)
+		}
+		if err := rows.Err(); err != nil {
+			t.Fatal(err)
+		}
 	})
 
 	tt.Run("delete", func(t *testing.T) {
