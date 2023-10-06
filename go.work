@@ -7,4 +7,5 @@ use (
 	./cli-survey
 	./db-duckdb
 	./nats
+	./nats-micro
 )
