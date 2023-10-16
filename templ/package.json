@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "daisyui": "^3.9.2",
+    "htmx.org": "^1.9.6",
+    "hyperscript.org": "^0.9.11",
+    "tailwindcss": "^3.3.3"
+  }
+}

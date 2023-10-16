@@ -1,0 +1,33 @@
+package components
+
+type BaseConfig struct {
+	Title    string
+	NavLinks [][2]string
+}
+
+type SitePartialer interface {
+	Head() templ.Component
+	Header() templ.Component
+	Main() templ.Component
+	Footer() templ.Component
+}
+
+templ Base(s SitePartialer) {
+	<!DOCTYPE html>
+	<html lang="en-us" dir="ltr">
+		<head>
+			{! s.Head() }
+		</head>
+		<body>
+			<header>
+				{! s.Header() }
+			</header>
+			<main class="">
+				{! s.Main() }
+			</main>
+			<footer class="footer footer-center p-4 bg-base-300 text-base-content">
+				{! s.Footer() }
+			</footer>
+		</body>
+	</html>
+}

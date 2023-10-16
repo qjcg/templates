@@ -1,0 +1,16 @@
+package components
+
+templ (b BaseConfig) Header() {
+	<div class="navbar bg-base-100">
+		<div class="flex-1">
+			<a class="btn btn-ghost normal-case text-xl">{ b.Title }</a>
+		</div>
+		<div class="flex-none">
+			<ul class="menu menu-horizontal px-1">
+				for _, pair := range b.NavLinks {
+					<li><a href={ templ.URL(pair[1]) }>{ pair[0] }</a></li>
+				}
+			</ul>
+		</div>
+	</div>
+}

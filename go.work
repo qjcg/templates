@@ -8,4 +8,5 @@ use (
 	./db-duckdb
 	./nats
 	./nats-micro
+	./templ
 )
