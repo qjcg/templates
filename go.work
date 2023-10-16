@@ -6,6 +6,7 @@ use (
 	./cli-script
 	./cli-survey
 	./db-duckdb
+	./db-sqlc
 	./nats
 	./nats-micro
 	./templ
