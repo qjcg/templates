@@ -9,5 +9,5 @@ use (
 	./db-sqlc
 	./nats
 	./nats-micro
-	./templ
+	./web-templ
 )

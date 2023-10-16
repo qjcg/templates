@@ -11,7 +11,7 @@ import (
 
 	"github.com/a-h/templ"
 
-	"github.com/qjcg/templ-example/components"
+	"github.com/qjcg/templates/web-templ/components"
 )
 
 //go:embed static

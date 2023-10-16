@@ -1,4 +1,4 @@
-module github.com/qjcg/templ-example
+module github.com/qjcg/templates/web-templ
 
 go 1.21.1
 
