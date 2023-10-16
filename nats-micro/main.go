@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"log"
+	"runtime"
 	"strconv"
 
 	"github.com/nats-io/nats.go"
@@ -61,8 +62,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Wait forever.
-	select {}
+	runtime.Goexit()
 }
 
 func echoHandler(req micro.Request) {
