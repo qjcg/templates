@@ -33,7 +33,7 @@ func main() {
 	flagDump := flag.Bool("d", false, "dump content to stdout")
 	flag.Parse()
 
-	config := base.Config{
+	config := &base.Config{
 		Title: "Demo: Single Page App",
 		NavLinks: [][2]string{
 			{"About", "#About"},
