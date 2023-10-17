@@ -1,10 +1,10 @@
-package components
+package base
 
-templ (b BaseConfig) Head() {
+templ (c Config) Head() {
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>{ b.Title }</title>
+	<title>{ c.Title }</title>
 	<link href="/static/daisyui-full.css" rel="stylesheet" type="text/css"/>
 	<script src="/static/tailwind.js"></script>
- 	<script src="/static/bundle.js"></script>
+	<script src="/static/bundle.js"></script>
 }

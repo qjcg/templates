@@ -11,7 +11,7 @@ import (
 
 	"github.com/a-h/templ"
 
-	"github.com/qjcg/templates/web-templ/components"
+	"github.com/qjcg/templates/web-templ/components/base"
 )
 
 //go:embed static
@@ -33,7 +33,7 @@ func main() {
 	flagDump := flag.Bool("d", false, "dump content to stdout")
 	flag.Parse()
 
-	baseConfig := components.BaseConfig{
+	config := base.Config{
 		Title: "Demo: Single Page App",
 		NavLinks: [][2]string{
 			{"About", "#About"},
@@ -41,7 +41,7 @@ func main() {
 		},
 	}
 
-	mainComponent := baseConfig.Main()
+	mainComponent := config.Main()
 
 	if *flagDump {
 		dump(mainComponent, os.Stdout)

@@ -1,0 +1,14 @@
+package base
+
+import (
+	"strconv"
+	"time"
+)
+
+var year string = strconv.Itoa(time.Now().Year())
+
+templ (c Config) Footer() {
+	<aside>
+		<p>Copyright © { year } - All rights reserved by FooBar Labs</p>
+	</aside>
+}

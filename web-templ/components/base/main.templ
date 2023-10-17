@@ -1,25 +1,25 @@
-package components
+package base
 
-type BaseConfig struct {
+type Config struct {
 	Title    string
 	NavLinks [][2]string
 }
 
-templ (b BaseConfig) Main() {
+templ (c Config) Main() {
 	<!DOCTYPE html>
 	<html lang="en-us" dir="ltr">
 		<head>
-			{! b.Head() }
+			{! c.Head() }
 		</head>
 		<body>
 			<header>
-				{! b.Header() }
+				{! c.Header() }
 			</header>
 			<main class="">
-				{! b.Content() }
+				{! c.Content() }
 			</main>
 			<footer class="footer footer-center p-4 bg-base-300 text-base-content">
-				{! b.Footer() }
+				{! c.Footer() }
 			</footer>
 		</body>
 	</html>

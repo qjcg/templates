@@ -25,7 +25,7 @@ bundle:
 
 .PHONY: fmt
 fmt:
-	templ fmt ./components/*.templ
+	templ fmt ./components
 
 .PHONY: clean
 clean:
