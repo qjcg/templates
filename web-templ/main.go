@@ -5,6 +5,7 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -21,8 +22,8 @@ type component struct {
 	templ.Component
 }
 
-func (c component) dump() {
-	c.Render(context.Background(), os.Stdout)
+func (c component) dump(w io.Writer) {
+	c.Render(context.Background(), w)
 }
 
 func (c component) serve() {
@@ -45,10 +46,10 @@ func main() {
 		},
 	}
 
-	c := component{components.Base(baseConfig)}
+	c := component{baseConfig.Main()}
 
 	if *flagDump {
-		c.dump()
+		c.dump(os.Stdout)
 		return
 	}
 
