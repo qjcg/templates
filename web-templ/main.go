@@ -4,7 +4,6 @@ import (
 	"context"
 	"embed"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -18,18 +17,14 @@ import (
 //go:embed static
 var staticContent embed.FS
 
-type component struct {
-	templ.Component
-}
-
-func (c component) dump(w io.Writer) {
+func dump(c templ.Component, w io.Writer) {
 	c.Render(context.Background(), w)
 }
 
-func (c component) serve() {
+func serve(c templ.Component) {
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
 	http.Handle("/", templ.Handler(c))
-	fmt.Println("Listening on :3000")
+	log.Println("Listening on :3000")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 
 }
@@ -46,12 +41,12 @@ func main() {
 		},
 	}
 
-	c := component{baseConfig.Main()}
+	mainComponent := baseConfig.Main()
 
 	if *flagDump {
-		c.dump(os.Stdout)
+		dump(mainComponent, os.Stdout)
 		return
 	}
 
-	c.serve()
+	serve(mainComponent)
 }
