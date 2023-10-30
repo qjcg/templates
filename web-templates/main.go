@@ -11,7 +11,8 @@ import (
 
 	"github.com/a-h/templ"
 
-	"github.com/qjcg/templates/web-templ/components/base"
+	"github.com/qjcg/templates/web-templates/components/base"
+	"github.com/qjcg/templates/web-templates/components/blog"
 )
 
 //go:embed static
@@ -33,11 +34,13 @@ func main() {
 	flagDump := flag.Bool("d", false, "dump content to stdout")
 	flag.Parse()
 
-	config := &base.Config{
-		Title: "Demo: Single Page App",
-		NavLinks: [][2]string{
-			{"About", "#About"},
-			{"Contact", "#Contact"},
+	config := &blog.Config{
+		Config: &base.Config{
+			Title: "Demo: Blog",
+			NavLinks: [][2]string{
+				{"About", "#About"},
+				{"Contact", "#Contact"},
+			},
 		},
 	}
 

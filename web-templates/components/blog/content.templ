@@ -1,0 +1,13 @@
+package blog
+
+import (
+	"github.com/qjcg/templates/web-templ/components/base"
+)
+
+type Config struct {
+	base.Config
+}
+
+templ (c *Config) Content() {
+	<h1>Foo Bar Baz</h1>
+}
