@@ -10,7 +10,7 @@ import "io"
 import "bytes"
 
 import (
-	"github.com/qjcg/templates/web-templ/components/base"
+	"github.com/qjcg/templates/web-templates/components/base"
 )
 
 type Config struct {

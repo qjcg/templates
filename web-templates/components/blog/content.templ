@@ -1,11 +1,11 @@
 package blog
 
 import (
-	"github.com/qjcg/templates/web-templ/components/base"
+	"github.com/qjcg/templates/web-templates/components/base"
 )
 
 type Config struct {
-	base.Config
+	*base.Config
 }
 
 templ (c *Config) Content() {
