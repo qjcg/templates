@@ -1,7 +1,6 @@
 package main
 
 import (
-	"list"
 	"strings"
 )
 
@@ -18,103 +17,86 @@ import (
 #Country: {
 	name!: string
 	code!: string
+	cities!: [string]: name: string
 }
 
-// A list of countries along with their 2-letter codes.
-_Countries: [Name=string]: name: Name
+_Countries: [string]: #Country
+_Countries: [CountryName=string]: name: CountryName
+_Countries: [string]: cities: [CityName=string]: name: CityName
 _Countries: {
-	Canada: code:    "CA"
-	USA: code:       "US"
-	GB: code:        "GB"
-	Singapore: code: "SG"
-}
+	Canada: {
+		code: "CA"
+		cities: Montreal: _
+	}
 
-#City: {
-	name!:    string
-	country!: #Country
-}
+	USA: {
+		code: "US"
+		cities: {
+			Chicago:   _
+			NewJersey: _
+		}
+	}
 
-// A list of cities along with the countries they are part of.
-_Cities: [Name=string]: name: Name
-_Cities: {
-	Montreal: country:  _Countries.Canada
-	Singapore: country: _Countries.Singapore
-	London: country:    _Countries.GB
-	Chicago: country:   _Countries.USA
-	NewJersey: country: _Countries.USA
-}
+	GreatBritain: {
+		code: "GB"
+		cities: London: _
+	}
 
-#NATSClusterParams: {
-	name!:  string
-	nodes!: uint8
-	city!:  #City
-}
-
-#defaultNATSClusterParams: self = {
-	name:  strings.ToLower("\(self.city.country.code)-\(self.city.name)")
-	nodes: *3 | uint8
-
-	#NATSClusterParams
-}
-
-_clusters: [ClusterName=string]: {
-	params: #NATSClusterParams
-
-	nodes: [NodeName=string]: {
-		params:
-			container: #NATSContainer
+	Singapore: {
+		code: "SG"
+		cities: Singapore: _
 	}
 }
 
-for name, data in _clusters {
-	_clusters: "\(name)": {
-		for n in c.params.nodes {
-			let nodeName = "\(name)-\(n)"
-			let confFile = "\(nodeName).json"
-			let volName = "nats-\(nodeName)"
-
-			nodes: "\(nodeName)": #NATSContainer & {
-				command: "--config \(confFile)"
-				volumes: [
-					"./conf/\(confFile):/\(confFile):ro",
-					"\(volName):/nats",
-				]
-			}
-
+_CountriesByCity: {
+	for Country in _Countries {
+		for CityName, _ in Country.cities {
+			"\(CityName)": Country.name
 		}
 	}
 }
 
-// NATS clusters.
+#Cluster: {
+	let Country = _CountriesByCity[city]
 
-for i, c in _clusters {
-	for n in list.Range(1, c.nodes+1, 1) {
+	city!:    string
+	name:     *strings.ToLower("\(_Countries[Country].code)-\(city)") | string
+	numNodes: *3 | uint8
 
-		let nodeName = "\(c.name)-\(n)"
-		let confFile = "\(nodeName).json"
-		let portPrefix = "\(i+1)\(n)"
-		let volName = "nats-\(nodeName)"
+	for i, _ in ([0] * numNodes) {
+		let nodeName = "\(name)-\(i+1)"
 
-		services: {
-			// NATS cluster.
-			// See https://github.com/ConnectEverything/rethink_connectivity_examples/blob/main/episode_5/docker-compose.yml
-			"\(nodeName)": #NATSContainer & {
+		nodes: (nodeName): {
+			container: #NATSContainer & {
 				command: "--config \(confFile)"
-				ports: [
-					"\(portPrefix)422:4222",
-					"\(portPrefix)622:6222",
-					"\(portPrefix)722:7422",
-					"\(portPrefix)822:8222",
-				]
-				volumes: [
-					"./conf/\(confFile):/\(confFile):ro",
-					"\(volName):/nats",
-				]
+			}
+			confFile: *"\(nodeName).json" | string
+			volName:  *"nats-\(nodeName)" | string
+
+			Out: {
+				services: (nodeName): {
+					command: "--config \(confFile)"
+					volumes: [
+						"./conf/\(confFile):/\(confFile):ro",
+						"\(volName):/nats",
+					]
+				}
+
+				volumes: (volName): {}
 			}
 		}
+	}
+}
 
-		volumes: (volName): {}
+_Clusters: [string]: #Cluster
+_Clusters: {
+	Foo: city: "Chicago"
+	Bar: city: "Montreal"
+}
 
+for clusterData in _Clusters {
+	for nodeData in clusterData.nodes {
+		nodeData.Out
 	}
 }
 

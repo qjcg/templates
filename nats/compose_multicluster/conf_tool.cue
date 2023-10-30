@@ -1,7 +1,6 @@
 package main
 
 import (
-	"list"
 	"encoding/json"
 	"text/template"
 	"tool/cli"
@@ -70,39 +69,34 @@ command: build: {
 		path: outdir
 	}
 
-	for i, c in _clusters {
-		for n in list.Range(1, c.nodes+1, 1) {
-			for name, cueData in services if name != "natsbox" {
+	for c in _Clusters {
+		for nodeName, nodeData in c.nodes {
+			let fileName = "\(outdir)/\(nodeName).json"
 
-				let fileName = "\(outdir)/\(name).json"
+			let data = json.Marshal(({
+				adminUser:   "admin"
+				regularUser: "john"
+				password:    "password"
+				gatewayName: "myCluster"
+				clusterName: c.name
 
-				let data = json.Marshal(({
-					adminUser:   "admin"
-					regularUser: "john"
-					password:    "password"
-					gatewayName: "myCluster"
-					clusterName: c.name
+				#NATSConf
+			}).Out)
 
-					#NATSConf
-				}).Out)
+			"write_\(nodeName)": file.Create & {
+				filename: fileName
+				contents: data
 
-				"write_\(name)": file.Create & {
-					filename: fileName
-					contents: data
-
-					$after: mkdir
-				}
-
-				"print_\(name)": cli.Print & {
-					text:   fileName
-					$after: "write_\(name)"
-				}
-
+				$after: mkdir
 			}
 
+			"print_\(nodeName)": cli.Print & {
+				text:   fileName
+				$after: "write_\(nodeName)"
+			}
 		}
-	}
 
+	}
 }
 
 command: debug: {
